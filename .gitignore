@@ -1,0 +1,4 @@
+*.exe
+*.bin
+main
+test_input.txt
