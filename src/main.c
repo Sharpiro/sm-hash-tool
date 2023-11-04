@@ -7,15 +7,6 @@
 
 extern const uint64_t LOOKUP_TABLE[256];
 
-void process_char(const char character, uint64_t *hex_value) {
-  uint8_t table_index = character + ' ';
-  if ((uint8_t)(character - 'A') >= 0x1a) {
-    table_index = character;
-  }
-  *hex_value =
-      LOOKUP_TABLE[table_index ^ (uint8_t)*hex_value] ^ *hex_value >> 8;
-}
-
 int main() {
   char user_input[BUFFER_SIZE] = {};
   // FILE *file = fopen("test_input.txt", "r");
@@ -29,6 +20,7 @@ int main() {
     }
 
     if (current_char == '/' || current_char == '\\') {
+      current_char = '/';
       if (i == 0) {
         continue;
       }
@@ -41,10 +33,13 @@ int main() {
       if (next_char == 0 || next_char == '\r' || next_char == '\n') {
         break;
       }
-      process_char('/', &hex_value);
-    } else {
-      process_char(current_char, &hex_value);
     }
+
+    uint8_t table_index = current_char + ' ';
+    if ((uint8_t)(current_char - 'A') >= 0x1a) {
+      table_index = current_char;
+    }
+    hex_value = LOOKUP_TABLE[table_index ^ (uint8_t)hex_value] ^ hex_value >> 8;
   }
 
   uint64_t hex_value_display = hex_value >> 2 | 0x8000000000000000;
