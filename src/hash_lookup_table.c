@@ -1,7 +1,7 @@
 #include <stdint.h>
 
 // clang-format off
-const uint64_t LOOKUP_TABLE[256] = {
+const uint64_t HASH_LOOKUP_TABLE[256] = {
   0x0000000000000000, 0xb32e4cbe03a75f6f,
   0xf4843657a840a05b, 0x47aa7ae9abe7ff34,
   0x7bd0c384ff8f5e33, 0xc8fe8f3afc28015c,

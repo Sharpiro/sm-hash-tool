@@ -1,5 +1,8 @@
 *.exe
 *.bin
+*.pdb
 main
 test_input.txt
 sm_hash_tool
+out_test.txt
+temp_expected_hashes.txt
