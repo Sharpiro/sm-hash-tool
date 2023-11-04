@@ -7,12 +7,10 @@
 
 extern const uint64_t LOOKUP_TABLE[256];
 
-void process_char(char current_char, uint64_t *hex_value) {
-  printf("%c\n", current_char);
-
-  uint8_t table_index = current_char + ' ';
-  if (current_char - 'A' >= 0x1a) {
-    table_index = current_char;
+void process_char(const char character, uint64_t *hex_value) {
+  uint8_t table_index = character + ' ';
+  if ((uint8_t)(character - 'A') >= 0x1a) {
+    table_index = character;
   }
   *hex_value =
       LOOKUP_TABLE[table_index ^ (uint8_t)*hex_value] ^ *hex_value >> 8;
@@ -46,5 +44,5 @@ int main() {
   }
 
   uint64_t hex_value_display = hex_value >> 2 | 0x8000000000000000;
-  printf("done %llu\n", hex_value_display);
+  printf("%llu\n", hex_value_display);
 }
