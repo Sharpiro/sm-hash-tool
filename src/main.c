@@ -7,15 +7,6 @@
 
 extern const uint64_t LOOKUP_TABLE[256];
 
-void process_char(const char character, uint64_t *hex_value) {
-  uint8_t table_index = character + ' ';
-  if ((uint8_t)(character - 'A') >= 0x1a) {
-    table_index = character;
-  }
-  *hex_value =
-      LOOKUP_TABLE[table_index ^ (uint8_t)*hex_value] ^ *hex_value >> 8;
-}
-
 int main() {
   char user_input[BUFFER_SIZE] = {};
   // FILE *file = fopen("test_input.txt", "r");
@@ -24,23 +15,30 @@ int main() {
   uint64_t hex_value = 0xc96c5795d7870f42;
   for (int i = 0; i < BUFFER_SIZE; i++) {
     char current_char = user_input[i];
-    char next_char = current_char;
-    char selected_char = '/';
-    if (current_char == '/' || current_char == '\\') {
-      while (next_char == '/' || next_char == '\\') {
-        i++;
-        next_char = user_input[i];
+    char current_car_resolved = current_char;
+    if (current_car_resolved == '/' || current_car_resolved == '\\') {
+      if (i == 0) {
+        continue;
       }
-      i--;
-    } else {
-      selected_char = current_char;
+
+      int slash_index = i;
+      while (current_char == '/' || current_char == '\\') {
+        slash_index++;
+        current_char = user_input[slash_index];
+      }
+      i = slash_index - 1;
+      current_car_resolved = '/';
     }
 
-    if (next_char == 0 || next_char == '\r' || next_char == '\n') {
+    if (current_char == 0 || current_char == '\r' || current_char == '\n') {
       break;
     }
 
-    process_char(selected_char, &hex_value);
+    uint8_t table_index = current_car_resolved + ' ';
+    if ((uint8_t)(current_car_resolved - 'A') >= 0x1a) {
+      table_index = current_car_resolved;
+    }
+    hex_value = LOOKUP_TABLE[table_index ^ (uint8_t)hex_value] ^ hex_value >> 8;
   }
 
   uint64_t hex_value_display = hex_value >> 2 | 0x8000000000000000;
