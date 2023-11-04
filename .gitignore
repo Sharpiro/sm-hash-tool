@@ -2,3 +2,4 @@
 *.bin
 main
 test_input.txt
+sm_hash_tool
