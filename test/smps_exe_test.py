@@ -1,4 +1,7 @@
+import os
 import subprocess
+
+PROGRAM_NAME = "./sm_hash_tool" if os.name == "posix" else "sm_hash_tool.exe"
 
 
 KNOWN_BAD_HASH_LINES = {143768, 348951, 358992}
@@ -6,7 +9,7 @@ KNOWN_BAD_HASH_LINES = {143768, 348951, 358992}
 
 def hash_stdin(input: str):
     return subprocess.run(
-        "sm_hash_tool.exe",
+        PROGRAM_NAME,
         input=input,
         text=True,
         stdout=subprocess.PIPE,
@@ -16,8 +19,7 @@ def hash_stdin(input: str):
 
 def hash_file(file: str):
     return subprocess.run(
-        # f'SMPS4HashTool.exe "{input}"',
-        f'sm_hash_tool.exe "{file}"',
+        f'{PROGRAM_NAME} "{file}"',
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -30,7 +32,6 @@ def test_asset_hashes_slow():
     results = [v.split(",") for v in results]
 
     start = 0
-    # end =
     for [i, [name, expected_hash]] in list(enumerate(results))[start:]:
         if i + 1 in KNOWN_BAD_HASH_LINES:
             print("skipping", i + 1)
@@ -46,8 +47,6 @@ def test_asset_hashes():
     asset_hash_lines = [v.split(",") for v in asset_hash_lines]
     asset_names = [v[0] for v in asset_hash_lines]
     asset_names = "\n".join(asset_names)
-    # temp_out_file = open("temp_expected_hashes.txt", "w")
-    # temp_out_file.write(asset_names)
     hash_results = hash_stdin(asset_names).split("\n")
 
     for i in range(0, len(asset_hash_lines)):
